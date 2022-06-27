@@ -1,0 +1,85 @@
+﻿Attribute VB_Name = "Module2"
+
+Sub Macro1()
+
+Attribute Macro1.VB_Description = "Macro Macro1\nMacro Recorded Tue 5/19/15 by reviewers."
+
+' Macro Macro1
+
+' Macro Recorded Tue 5/19/15 by reviewers.
+
+    SetTaskField Field:="Name", Value:="task1", TaskID:=1, ProjectName:="Project2"
+
+    SelectTaskField Row:=2, Column:="Name", RowRelative:=False
+
+    SetTaskField Field:="Name", Value:="task2", TaskID:=2, ProjectName:="Project2"
+
+    SelectTaskField Row:=3, Column:="Name", RowRelative:=False
+
+    SetTaskField Field:="Name", Value:="task3", TaskID:=3, ProjectName:="Project2"
+
+    SelectTaskField Row:=4, Column:="Name", RowRelative:=False
+
+    SelectTaskField Row:=2, Column:="Duration", RowRelative:=False
+
+    SetTaskField Field:="Duration", Value:="4", TaskID:=2, ProjectName:="Project2"
+
+    SelectTaskField Row:=3, Column:="Duration", RowRelative:=False
+
+    SetTaskField Field:="Duration", Value:="5", TaskID:=3, ProjectName:="Project2"
+
+    SelectTaskField Row:=4, Column:="Duration", RowRelative:=False
+
+    SelectTaskField Row:=2, Column:="Predecessors", RowRelative:=False
+
+    SetTaskField Field:="Predecessors", Value:="1", TaskID:=2, ProjectName:="Project2"
+
+    SelectTaskField Row:=3, Column:="Predecessors", RowRelative:=False
+
+    SetTaskField Field:="Predecessors", Value:="2", TaskID:=3, ProjectName:="Project2"
+
+    SelectTaskField Row:=4, Column:="Predecessors", RowRelative:=False
+
+    SelectTaskField Row:=4, Column:="Name", RowRelative:=False
+
+    SelectTaskField Row:=2, Column:="Resource Names", RowRelative:=False
+
+    SetTaskField Field:="Resource Names", Value:="worker1,worker2", TaskID:=2, ProjectName:="Project2"
+
+    SelectTaskField Row:=3, Column:="Resource Names", RowRelative:=False
+
+    SetTaskField Field:="Resource Names", Value:="worker1[20%], worker2", TaskID:=3, ProjectName:="Project2"
+
+    SelectTaskField Row:=4, Column:="Resource Names", RowRelative:=False
+
+    SelectTaskField Row:=4, Column:="Name", RowRelative:=False
+
+    SetTaskField Field:="Name", Value:="task4", TaskID:=4, ProjectName:="Project2"
+
+    SelectTaskField Row:=5, Column:="Name", RowRelative:=False
+
+    SetTaskField Field:="Name", Value:="task5", TaskID:=5, ProjectName:="Project2"
+
+    SelectTaskField Row:=6, Column:="Name", RowRelative:=False
+
+    SelectTaskField Row:=4, Column:="Task Mode", RowRelative:=False
+
+    SetTaskField Field:="Task Mode", Value:="Yes", TaskID:=4, ProjectName:="Project2"
+
+    SelectTaskField Row:=6, Column:="Name", RowRelative:=False
+
+    SelectRow Row:=5, RowRelative:=False
+
+    OutlineIndent
+
+    SelectTaskField Row:=5, Column:="Start", RowRelative:=False
+
+    SetTaskField Field:="Start", Value:="Thu 5/21/15", TaskID:=5, ProjectName:="Project2"
+
+    SelectTaskField Row:=4, Column:="Finish", RowRelative:=False
+
+    SetTaskField Field:="Finish", Value:="Sat 5/30/15", TaskID:=4, ProjectName:="Project2"
+
+    SelectTaskField Row:=10, Column:="Finish", RowRelative:=False
+
+End Sub

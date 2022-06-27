@@ -1,0 +1,7 @@
+C:\GitHub\lazaralex2002\.Net-Projects\GIT_PHASE2\GIT_PHASE2\bin\Debug\GIT_PHASE2.exe.config
+C:\GitHub\lazaralex2002\.Net-Projects\GIT_PHASE2\GIT_PHASE2\bin\Debug\GIT_PHASE2.exe
+C:\GitHub\lazaralex2002\.Net-Projects\GIT_PHASE2\GIT_PHASE2\bin\Debug\GIT_PHASE2.pdb
+C:\GitHub\lazaralex2002\.Net-Projects\GIT_PHASE2\GIT_PHASE2\obj\Debug\GIT_PHASE2.csproj.AssemblyReference.cache
+C:\GitHub\lazaralex2002\.Net-Projects\GIT_PHASE2\GIT_PHASE2\obj\Debug\GIT_PHASE2.csproj.CoreCompileInputs.cache
+C:\GitHub\lazaralex2002\.Net-Projects\GIT_PHASE2\GIT_PHASE2\obj\Debug\GIT_PHASE2.exe
+C:\GitHub\lazaralex2002\.Net-Projects\GIT_PHASE2\GIT_PHASE2\obj\Debug\GIT_PHASE2.pdb
