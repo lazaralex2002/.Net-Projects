@@ -84,11 +84,5 @@
   <ItemGroup>
     <Content Include="bin\Debug\input.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PCL\PCL.csproj">
-      <Project>{deddca38-d595-42a8-a231-fef466305c48}</Project>
-      <Name>PCL</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

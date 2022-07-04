@@ -10,21 +10,14 @@
 namespace MvcApplication
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Resource
+    public partial class GetResourceTaskDetails_Result
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Resource()
-        {
-            this.ResourceTasks = new HashSet<ResourceTask>();
-        }
-    
         public int ResourceId { get; set; }
         public string ResourceName { get; set; }
         public Nullable<decimal> ResourceRate { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ResourceTask> ResourceTasks { get; set; }
+        public int RelationshipId { get; set; }
+        public Nullable<int> ResourceId1 { get; set; }
+        public Nullable<int> TaskId { get; set; }
     }
 }

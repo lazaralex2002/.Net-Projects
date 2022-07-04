@@ -1,0 +1,70 @@
+﻿@using MvcApplication
+@model Task
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Assigned Resources</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Resource Name
+        </th>
+        <th>
+            Resource Rate
+        </th>
+        <th>
+        </th>
+        <th>
+        </th>
+    </tr>
+
+    @foreach (var resource in ViewBag.AssignedResources)
+    {
+        <tr>
+            <td>
+                @resource.ResourceName
+            </td>
+            <td>
+                @resource.ResourceRate
+            </td>
+            <td>
+            </td>
+            <td>
+                @{
+                    int realtionId = 0;
+                    foreach (var relation in ViewBag.TaskResources)
+                    {
+                        if(relation.ResourceId == resource.ResourceId && relation.TaskId == Model.TaskId )
+                        {
+                            realtionId = relation.RelationshipId;
+                        }
+                    }
+                    @Html.ActionLink("Delete", "DeassignResource", new { id = realtionId })
+                }
+
+
+            </td>
+        </tr>
+    }
+</table>
+
+<div>
+    <form action="/Tasks/AssignResource/@Model.TaskId" method="post" class="dropdown">
+        <label for="resource">Assign a resource:</label>
+        <select id="resource" name="resource">
+            @foreach (var res in ViewBag.ResourcesThatCanBeAssigned)
+            {
+                <option value=" @res.ResourceId "> @res.ResourceName </option>
+            }
+        </select>
+        <input type='hidden' name='taskId' value=@Model.TaskId />
+        <input type="submit" value="Submit" class="btn btn-default">
+    </form>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TaskId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

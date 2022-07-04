@@ -1,0 +1,39 @@
+﻿@using MvcApplication
+@model Resource
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Task Name
+        </th>
+        <th>
+            Task Duration
+        </th>
+        <th>
+            Belonging Project
+        </th>
+    </tr>
+
+    @foreach (var task in ViewBag.Tasks)
+    {
+        <tr>
+            <td>
+                @task.Name
+            </td>
+            <td>
+                @task.Duration
+            </td>
+            <td>
+                @task.ProjectId
+            </td>
+        </tr>
+    }
+</table>
+@Html.ActionLink("Resource Page", "") |
+@Html.ActionLink("Resource Details", "/Details", new { id = Model.ResourceId })

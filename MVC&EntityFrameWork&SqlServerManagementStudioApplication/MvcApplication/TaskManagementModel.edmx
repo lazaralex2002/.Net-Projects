@@ -9,28 +9,30 @@
           <Key>
             <PropertyRef Name="ProjectId" />
           </Key>
-          <Property Name="ProjectId" Type="int" Nullable="false" />
+          <Property Name="ProjectId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProjectName" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Resource">
           <Key>
             <PropertyRef Name="ResourceId" />
           </Key>
-          <Property Name="ResourceId" Type="int" Nullable="false" />
+          <Property Name="ResourceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ResourceName" Type="varchar" MaxLength="50" />
           <Property Name="ResourceRate" Type="numeric" Precision="8" Scale="1" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'TaskManagement.dbo.ResourceTask' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
         <EntityType Name="ResourceTask">
+          <Key>
+            <PropertyRef Name="RelationshipId" />
+          </Key>
+          <Property Name="RelationshipId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ResourceId" Type="int" />
           <Property Name="TaskId" Type="int" />
-        </EntityType>-->
+        </EntityType>
         <EntityType Name="Task">
           <Key>
-            <PropertyRef Name="TaskID" />
+            <PropertyRef Name="TaskId" />
           </Key>
-          <Property Name="TaskID" Type="int" Nullable="false" />
+          <Property Name="TaskId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" />
           <Property Name="Duration" Type="numeric" Precision="8" Scale="1" />
           <Property Name="Start" Type="datetime" />
@@ -38,19 +40,43 @@ warning 6013: The table/view 'TaskManagement.dbo.ResourceTask' does not have a p
           <Property Name="TaskMode" Type="int" />
           <Property Name="ProjectId" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'TaskManagement.dbo.TaskPredecessor' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
         <EntityType Name="TaskPredecessor">
+          <Key>
+            <PropertyRef Name="RelationshipId" />
+          </Key>
+          <Property Name="RelationshipId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TaskId" Type="int" />
           <Property Name="PredecessorId" Type="int" />
-        </EntityType>-->
-        <!--Errors Found During Generation:
-error 6004: The table 'TaskManagement.dbo.ResourceTask' is referenced by a relationship, but cannot be found.
-        <Association Name="FK__ResourceT__Resou__2B3F6F97" />-->
-        <!--Errors Found During Generation:
-error 6004: The table 'TaskManagement.dbo.ResourceTask' is referenced by a relationship, but cannot be found.
-        <Association Name="FK__ResourceT__TaskI__2C3393D0" />-->
-        <Association Name="FK__Task__ProjectId__276EDEB3">
+        </EntityType>
+        <Association Name="FK__ResourceT__Resou__2D27B809">
+          <End Role="Resource" Type="Self.Resource" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ResourceTask" Type="Self.ResourceTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Resource">
+              <PropertyRef Name="ResourceId" />
+            </Principal>
+            <Dependent Role="ResourceTask">
+              <PropertyRef Name="ResourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResourceT__TaskI__2E1BDC42">
+          <End Role="Task" Type="Self.Task" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ResourceTask" Type="Self.ResourceTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="TaskId" />
+            </Principal>
+            <Dependent Role="ResourceTask">
+              <PropertyRef Name="TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Task__ProjectId__286302EC">
           <End Role="Project" Type="Self.Project" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -64,19 +90,60 @@ error 6004: The table 'TaskManagement.dbo.ResourceTask' is referenced by a relat
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <!--Errors Found During Generation:
-error 6004: The table 'TaskManagement.dbo.TaskPredecessor' is referenced by a relationship, but cannot be found.
-        <Association Name="FK__TaskPrede__Prede__31EC6D26" />-->
-        <!--Errors Found During Generation:
-error 6004: The table 'TaskManagement.dbo.TaskPredecessor' is referenced by a relationship, but cannot be found.
-        <Association Name="FK__TaskPrede__TaskI__30F848ED" />-->
+        <Association Name="FK__TaskPrede__Prede__31EC6D26">
+          <End Role="Task" Type="Self.Task" Multiplicity="0..1" />
+          <End Role="TaskPredecessor" Type="Self.TaskPredecessor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="TaskId" />
+            </Principal>
+            <Dependent Role="TaskPredecessor">
+              <PropertyRef Name="PredecessorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TaskPrede__TaskI__30F848ED">
+          <End Role="Task" Type="Self.Task" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaskPredecessor" Type="Self.TaskPredecessor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="TaskId" />
+            </Principal>
+            <Dependent Role="TaskPredecessor">
+              <PropertyRef Name="TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GetProjectCost" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetResourceTaskDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetTaskCost" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="TaskManagementModelStoreContainer">
           <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Resource" EntityType="Self.Resource" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResourceTask" EntityType="Self.ResourceTask" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Task" EntityType="Self.Task" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Task__ProjectId__276EDEB3" Association="Self.FK__Task__ProjectId__276EDEB3">
+          <EntitySet Name="TaskPredecessor" EntityType="Self.TaskPredecessor" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__ResourceT__Resou__2D27B809" Association="Self.FK__ResourceT__Resou__2D27B809">
+            <End Role="Resource" EntitySet="Resource" />
+            <End Role="ResourceTask" EntitySet="ResourceTask" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResourceT__TaskI__2E1BDC42" Association="Self.FK__ResourceT__TaskI__2E1BDC42">
+            <End Role="Task" EntitySet="Task" />
+            <End Role="ResourceTask" EntitySet="ResourceTask" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Task__ProjectId__286302EC" Association="Self.FK__Task__ProjectId__286302EC">
             <End Role="Project" EntitySet="Project" />
             <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TaskPrede__Prede__31EC6D26" Association="Self.FK__TaskPrede__Prede__31EC6D26">
+            <End Role="Task" EntitySet="Task" />
+            <End Role="TaskPredecessor" EntitySet="TaskPredecessor" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TaskPrede__TaskI__30F848ED" Association="Self.FK__TaskPrede__TaskI__30F848ED">
+            <End Role="Task" EntitySet="Task" />
+            <End Role="TaskPredecessor" EntitySet="TaskPredecessor" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -87,32 +154,56 @@ error 6004: The table 'TaskManagement.dbo.TaskPredecessor' is referenced by a re
           <Key>
             <PropertyRef Name="ProjectId" />
           </Key>
-          <Property Name="ProjectId" Type="Int32" Nullable="false" />
+          <Property Name="ProjectId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProjectName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Tasks" Relationship="Self.FK__Task__ProjectId__276EDEB3" FromRole="Project" ToRole="Task" />
+          <NavigationProperty Name="Tasks" Relationship="Self.FK__Task__ProjectId__286302EC" FromRole="Project" ToRole="Task" />
         </EntityType>
         <EntityType Name="Resource">
           <Key>
             <PropertyRef Name="ResourceId" />
           </Key>
-          <Property Name="ResourceId" Type="Int32" Nullable="false" />
+          <Property Name="ResourceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ResourceName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ResourceRate" Type="Decimal" Precision="8" Scale="1" />
+          <NavigationProperty Name="ResourceTasks" Relationship="Self.FK__ResourceT__Resou__2D27B809" FromRole="Resource" ToRole="ResourceTask" />
+        </EntityType>
+        <EntityType Name="ResourceTask">
+          <Key>
+            <PropertyRef Name="RelationshipId" />
+          </Key>
+          <Property Name="RelationshipId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ResourceId" Type="Int32" />
+          <Property Name="TaskId" Type="Int32" />
+          <NavigationProperty Name="Resource" Relationship="Self.FK__ResourceT__Resou__2D27B809" FromRole="ResourceTask" ToRole="Resource" />
+          <NavigationProperty Name="Task" Relationship="Self.FK__ResourceT__TaskI__2E1BDC42" FromRole="ResourceTask" ToRole="Task" />
         </EntityType>
         <EntityType Name="Task">
           <Key>
-            <PropertyRef Name="TaskID" />
+            <PropertyRef Name="TaskId" />
           </Key>
-          <Property Name="TaskID" Type="Int32" Nullable="false" />
+          <Property Name="TaskId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Duration" Type="Decimal" Precision="8" Scale="1" />
           <Property Name="Start" Type="DateTime" Precision="3" />
           <Property Name="Finish" Type="DateTime" Precision="3" />
           <Property Name="TaskMode" Type="Int32" />
           <Property Name="ProjectId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Project" Relationship="Self.FK__Task__ProjectId__276EDEB3" FromRole="Task" ToRole="Project" />
+          <NavigationProperty Name="Project" Relationship="Self.FK__Task__ProjectId__286302EC" FromRole="Task" ToRole="Project" />
+          <NavigationProperty Name="ResourceTasks" Relationship="Self.FK__ResourceT__TaskI__2E1BDC42" FromRole="Task" ToRole="ResourceTask" />
+          <NavigationProperty Name="TaskPredecessors" Relationship="Self.FK__TaskPrede__Prede__31EC6D26" FromRole="Task" ToRole="TaskPredecessor" />
+          <NavigationProperty Name="TaskPredecessors1" Relationship="Self.FK__TaskPrede__TaskI__30F848ED" FromRole="Task" ToRole="TaskPredecessor" />
         </EntityType>
-        <Association Name="FK__Task__ProjectId__276EDEB3">
+        <EntityType Name="TaskPredecessor">
+          <Key>
+            <PropertyRef Name="RelationshipId" />
+          </Key>
+          <Property Name="RelationshipId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TaskId" Type="Int32" />
+          <Property Name="PredecessorId" Type="Int32" />
+          <NavigationProperty Name="Task" Relationship="Self.FK__TaskPrede__Prede__31EC6D26" FromRole="TaskPredecessor" ToRole="Task" />
+          <NavigationProperty Name="Task1" Relationship="Self.FK__TaskPrede__TaskI__30F848ED" FromRole="TaskPredecessor" ToRole="Task" />
+        </EntityType>
+        <Association Name="FK__Task__ProjectId__286302EC">
           <End Role="Project" Type="Self.Project" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -126,21 +217,114 @@ error 6004: The table 'TaskManagement.dbo.TaskPredecessor' is referenced by a re
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="TaskManagementEntities1" annotation:LazyLoadingEnabled="true">
+        <Association Name="FK__ResourceT__Resou__2D27B809">
+          <End Role="Resource" Type="Self.Resource" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ResourceTask" Type="Self.ResourceTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Resource">
+              <PropertyRef Name="ResourceId" />
+            </Principal>
+            <Dependent Role="ResourceTask">
+              <PropertyRef Name="ResourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResourceT__TaskI__2E1BDC42">
+          <End Role="Task" Type="Self.Task" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ResourceTask" Type="Self.ResourceTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="TaskId" />
+            </Principal>
+            <Dependent Role="ResourceTask">
+              <PropertyRef Name="TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TaskPrede__Prede__31EC6D26">
+          <End Role="Task" Type="Self.Task" Multiplicity="0..1" />
+          <End Role="TaskPredecessor" Type="Self.TaskPredecessor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="TaskId" />
+            </Principal>
+            <Dependent Role="TaskPredecessor">
+              <PropertyRef Name="PredecessorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TaskPrede__TaskI__30F848ED">
+          <End Role="Task" Type="Self.Task" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaskPredecessor" Type="Self.TaskPredecessor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="TaskId" />
+            </Principal>
+            <Dependent Role="TaskPredecessor">
+              <PropertyRef Name="TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TaskManagementEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Projects" EntityType="Self.Project" />
           <EntitySet Name="Resources" EntityType="Self.Resource" />
+          <EntitySet Name="ResourceTasks" EntityType="Self.ResourceTask" />
           <EntitySet Name="Tasks" EntityType="Self.Task" />
-          <AssociationSet Name="FK__Task__ProjectId__276EDEB3" Association="Self.FK__Task__ProjectId__276EDEB3">
+          <EntitySet Name="TaskPredecessors" EntityType="Self.TaskPredecessor" />
+          <AssociationSet Name="FK__Task__ProjectId__286302EC" Association="Self.FK__Task__ProjectId__286302EC">
             <End Role="Project" EntitySet="Projects" />
             <End Role="Task" EntitySet="Tasks" />
           </AssociationSet>
+          <AssociationSet Name="FK__ResourceT__Resou__2D27B809" Association="Self.FK__ResourceT__Resou__2D27B809">
+            <End Role="Resource" EntitySet="Resources" />
+            <End Role="ResourceTask" EntitySet="ResourceTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResourceT__TaskI__2E1BDC42" Association="Self.FK__ResourceT__TaskI__2E1BDC42">
+            <End Role="Task" EntitySet="Tasks" />
+            <End Role="ResourceTask" EntitySet="ResourceTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TaskPrede__Prede__31EC6D26" Association="Self.FK__TaskPrede__Prede__31EC6D26">
+            <End Role="Task" EntitySet="Tasks" />
+            <End Role="TaskPredecessor" EntitySet="TaskPredecessors" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TaskPrede__TaskI__30F848ED" Association="Self.FK__TaskPrede__TaskI__30F848ED">
+            <End Role="Task" EntitySet="Tasks" />
+            <End Role="TaskPredecessor" EntitySet="TaskPredecessors" />
+          </AssociationSet>
+          <FunctionImport Name="GetProjectCost" ReturnType="Collection(TaskManagementModel.GetProjectCost_Result)" />
+          <FunctionImport Name="GetTaskCost" ReturnType="Collection(TaskManagementModel.GetTaskCost_Result)" />
+          <FunctionImport Name="GetResourceTaskDetails" ReturnType="Collection(TaskManagementModel.GetResourceTaskDetails_Result)" />
         </EntityContainer>
+        <ComplexType Name="GetProjectCost_Result">
+          <Property Type="Int32" Name="ProjectId" Nullable="false" />
+          <Property Type="String" Name="ProjectName" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="ProjectCost" Nullable="true" Precision="38" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="GetTaskCost_Result">
+          <Property Type="Int32" Name="ProjectId" Nullable="false" />
+          <Property Type="Int32" Name="TaskId" Nullable="false" />
+          <Property Type="Decimal" Name="TaskCost" Nullable="true" Precision="38" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="GetResourceTaskDetails_Result">
+          <Property Type="Int32" Name="ResourceId" Nullable="false" />
+          <Property Type="String" Name="ResourceName" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="ResourceRate" Nullable="true" Precision="8" Scale="1" />
+          <Property Type="Int32" Name="RelationshipId" Nullable="false" />
+          <Property Type="Int32" Name="ResourceId1" Nullable="true" />
+          <Property Type="Int32" Name="TaskId" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="TaskManagementModelStoreContainer" CdmEntityContainer="TaskManagementEntities1">
+        <EntityContainerMapping StorageEntityContainer="TaskManagementModelStoreContainer" CdmEntityContainer="TaskManagementEntities">
           <EntitySetMapping Name="Projects">
             <EntityTypeMapping TypeName="TaskManagementModel.Project">
               <MappingFragment StoreEntitySet="Project">
@@ -158,10 +342,19 @@ error 6004: The table 'TaskManagement.dbo.TaskPredecessor' is referenced by a re
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ResourceTasks">
+            <EntityTypeMapping TypeName="TaskManagementModel.ResourceTask">
+              <MappingFragment StoreEntitySet="ResourceTask">
+                <ScalarProperty Name="RelationshipId" ColumnName="RelationshipId" />
+                <ScalarProperty Name="ResourceId" ColumnName="ResourceId" />
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Tasks">
             <EntityTypeMapping TypeName="TaskManagementModel.Task">
               <MappingFragment StoreEntitySet="Task">
-                <ScalarProperty Name="TaskID" ColumnName="TaskID" />
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Duration" ColumnName="Duration" />
                 <ScalarProperty Name="Start" ColumnName="Start" />
@@ -171,6 +364,45 @@ error 6004: The table 'TaskManagement.dbo.TaskPredecessor' is referenced by a re
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="TaskPredecessors">
+            <EntityTypeMapping TypeName="TaskManagementModel.TaskPredecessor">
+              <MappingFragment StoreEntitySet="TaskPredecessor">
+                <ScalarProperty Name="RelationshipId" ColumnName="RelationshipId" />
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="PredecessorId" ColumnName="PredecessorId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetProjectCost" FunctionName="TaskManagementModel.Store.GetProjectCost">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TaskManagementModel.GetProjectCost_Result">
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+                <ScalarProperty Name="ProjectCost" ColumnName="ProjectCost" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetTaskCost" FunctionName="TaskManagementModel.Store.GetTaskCost">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TaskManagementModel.GetTaskCost_Result">
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="TaskCost" ColumnName="TaskCost" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetResourceTaskDetails" FunctionName="TaskManagementModel.Store.GetResourceTaskDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TaskManagementModel.GetResourceTaskDetails_Result">
+                <ScalarProperty Name="ResourceId" ColumnName="ResourceId" />
+                <ScalarProperty Name="ResourceName" ColumnName="ResourceName" />
+                <ScalarProperty Name="ResourceRate" ColumnName="ResourceRate" />
+                <ScalarProperty Name="RelationshipId" ColumnName="RelationshipId" />
+                <ScalarProperty Name="ResourceId1" ColumnName="ResourceId1" />
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

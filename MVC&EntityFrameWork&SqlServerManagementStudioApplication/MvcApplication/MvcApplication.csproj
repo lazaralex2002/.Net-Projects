@@ -128,17 +128,31 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\HelloWorldController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\ResourcesController.cs" />
     <Compile Include="Controllers\TasksController.cs" />
+    <Compile Include="GetProjectCost_Result.cs">
+      <DependentUpon>TaskManagementModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetResourceTaskDetails_Result.cs">
+      <DependentUpon>TaskManagementModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetTaskCost_Result.cs">
+      <DependentUpon>TaskManagementModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Project.cs">
       <DependentUpon>TaskManagementModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.cs">
+      <DependentUpon>TaskManagementModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ResourceTask.cs">
       <DependentUpon>TaskManagementModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Task.cs">
@@ -158,6 +172,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TaskManagementModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="TaskPredecessor.cs">
+      <DependentUpon>TaskManagementModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +224,11 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\HelloWorld\Index.cshtml" />
+    <Content Include="Views\Tasks\Create.cshtml" />
+    <Content Include="Views\Tasks\Delete.cshtml" />
+    <Content Include="Views\Tasks\Details.cshtml" />
+    <Content Include="Views\Tasks\Edit.cshtml" />
+    <Content Include="Views\Tasks\Index.cshtml" />
     <EntityDeploy Include="TaskManagementModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>TaskManagementModel.Designer.cs</LastGenOutput>
@@ -214,11 +236,20 @@
     <Content Include="TaskManagementModel.edmx.diagram">
       <DependentUpon>TaskManagementModel.edmx</DependentUpon>
     </Content>
-    <Content Include="Views\Tasks\Create.cshtml" />
-    <Content Include="Views\Tasks\Delete.cshtml" />
-    <Content Include="Views\Tasks\Details.cshtml" />
-    <Content Include="Views\Tasks\Edit.cshtml" />
-    <Content Include="Views\Tasks\Index.cshtml" />
+    <Content Include="Views\Projects\Create.cshtml" />
+    <Content Include="Views\Projects\Delete.cshtml" />
+    <Content Include="Views\Projects\Details.cshtml" />
+    <Content Include="Views\Projects\Edit.cshtml" />
+    <Content Include="Views\Projects\Index.cshtml" />
+    <Content Include="Views\Resources\Create.cshtml" />
+    <Content Include="Views\Resources\Delete.cshtml" />
+    <Content Include="Views\Resources\Details.cshtml" />
+    <Content Include="Views\Resources\Edit.cshtml" />
+    <Content Include="Views\Resources\Index.cshtml" />
+    <Content Include="Views\Tasks\AssignResource.cshtml" />
+    <Content Include="Views\Tasks\ViewResources.cshtml" />
+    <Content Include="Views\Tasks\DeassignResource.cshtml" />
+    <Content Include="Views\Resources\ViewTasks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

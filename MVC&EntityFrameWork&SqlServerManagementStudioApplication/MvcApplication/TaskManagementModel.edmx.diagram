@@ -4,11 +4,17 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="13092fe0de7149d7a0d637d675c89b1d" Name="Diagram1">
-        <EntityTypeShape EntityType="TaskManagementModel.Project" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="TaskManagementModel.Resource" Width="1.5" PointX="2.875" PointY="4.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="TaskManagementModel.Task" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <AssociationConnector Association="TaskManagementModel.FK__Task__ProjectId__276EDEB3" ManuallyRouted="false" />
+      <Diagram DiagramId="e0915444eb72425fa0dd0de030f1a40c" Name="Diagram1">
+        <EntityTypeShape EntityType="TaskManagementModel.Project" Width="1.5" PointX="0.75" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="TaskManagementModel.Resource" Width="1.5" PointX="3" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TaskManagementModel.ResourceTask" Width="1.5" PointX="5.25" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TaskManagementModel.Task" Width="1.5" PointX="3" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TaskManagementModel.TaskPredecessor" Width="1.5" PointX="5.25" PointY="5.125" IsExpanded="true" />
+        <AssociationConnector Association="TaskManagementModel.FK__Task__ProjectId__286302EC" ManuallyRouted="false" />
+        <AssociationConnector Association="TaskManagementModel.FK__ResourceT__Resou__2D27B809" ManuallyRouted="false" />
+        <AssociationConnector Association="TaskManagementModel.FK__ResourceT__TaskI__2E1BDC42" ManuallyRouted="false" />
+        <AssociationConnector Association="TaskManagementModel.FK__TaskPrede__Prede__31EC6D26" ManuallyRouted="false" />
+        <AssociationConnector Association="TaskManagementModel.FK__TaskPrede__TaskI__30F848ED" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

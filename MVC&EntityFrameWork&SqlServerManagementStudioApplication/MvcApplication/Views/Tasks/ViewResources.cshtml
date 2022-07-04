@@ -1,0 +1,42 @@
+﻿@using MvcApplication
+@model Task
+@{
+    ViewBag.Title = "ViewResources";
+}
+
+<h2>ViewResources</h2>
+
+<div>
+    <h4><strong>Task:</strong> @Html.DisplayFor(model => model.Name)</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        @foreach (var resource in ViewBag.Resources)
+        {
+            <dt>
+                Resource Name
+            </dt>
+
+            <dd>
+                @resource.ResourceName
+            </dd>
+
+            <dt>
+                Resource Rate
+            </dt>
+
+            <dd>
+                @resource.ResourceRate
+            </dd>
+
+            <dt>
+            </dt>
+            <dd>
+                <br />
+            </dd>
+        }
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Assign Resources", "Assignresource", new { id = Model.TaskId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

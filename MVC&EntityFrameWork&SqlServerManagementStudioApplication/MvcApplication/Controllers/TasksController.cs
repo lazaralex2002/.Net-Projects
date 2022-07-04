@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 using MvcApplication;
@@ -12,13 +14,124 @@ namespace MvcApplication.Controllers
 {
     public class TasksController : Controller
     {
-        private TaskManagementEntities1 db = new TaskManagementEntities1();
-
+        private TaskManagementEntities taskManagementEntities = new TaskManagementEntities();
         // GET: Tasks
+        /*
         public ActionResult Index()
         {
-            var tasks = db.Tasks.Include(t => t.Project);
-            return View(tasks.ToList());
+            if (HttpContext.Session["Project"] == null)
+            {
+                return Redirect("/Projects/ChooseProject");
+            }
+            else
+            {
+                ViewBag.TaskCost = db.GetTaskCost().ToList();
+                var proj = int.Parse(HttpContext.Session["Project"].ToString());
+                var tasks = db.Tasks.Include(t => t.Project).Where(t => t.ProjectId == proj);
+                return View(tasks.ToList());
+            }
+        }
+        */
+
+        public ActionResult Index(string project)
+        {
+            ViewBag.TaskCost = taskManagementEntities.GetTaskCost().ToList();
+            ViewBag.Projects = taskManagementEntities.Projects.ToList();
+            if (HttpContext.Session["Project"] != null)
+            {
+                var proj = int.Parse(HttpContext.Session["Project"].ToString());
+                Redirect("/Tasks/?project=" + proj.ToString());
+            }
+            project = Request.QueryString["project"];
+            if (project == null || project == "")
+            {
+                var tasks = taskManagementEntities.Tasks.Include(t => t.Project);
+                return View(tasks.ToList());
+            }
+            else
+            {
+                ViewBag.TaskCost = taskManagementEntities.GetTaskCost().ToList();
+                var proj = int.Parse(project);
+                var tasks = taskManagementEntities.Tasks.Include(t => t.Project).Where(t => t.ProjectId == proj);
+                return View(tasks.ToList());
+            }
+        }
+
+        // POST: Tasks/AssignResource/5
+        [HttpPost]
+        public ActionResult AssignResource(int resource, int taskId)
+        {
+            var entity = new ResourceTask();
+            entity.ResourceId = resource;
+            entity.TaskId = taskId;
+            taskManagementEntities.ResourceTasks.Add(entity);
+            taskManagementEntities.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        // GET: Tasks/AssignResource/5
+        public ActionResult AssignResource(int? id)
+        {
+     
+            var TaskResources = taskManagementEntities.ResourceTasks.Where(rt => rt.TaskId == id).ToList();
+            var ResourceList = taskManagementEntities.Resources.ToList();
+            var ResourcesThatCanBeAssigned = new List<Resource>();
+            var AssignedResources = new List<Resource>();
+            foreach (var resource in ResourceList)
+            {
+                bool ok = true;
+                foreach(var taskResource in TaskResources)
+                {
+                    if (resource.ResourceId == taskResource.ResourceId) ok = false;
+                }
+                if(ok == true)
+                {
+                    ResourcesThatCanBeAssigned.Add(resource);
+                }
+                else
+                {
+                    AssignedResources.Add(resource);
+                }
+            }
+            ViewBag.AssignedResources = AssignedResources;
+            ViewBag.ResourcesThatCanBeAssigned = ResourcesThatCanBeAssigned;
+            ViewBag.TaskResources = TaskResources;
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Task task = taskManagementEntities.Tasks.Find(id);
+            if (task == null)
+            {
+                return HttpNotFound();
+            }
+            return View(task);
+        }
+
+        // GET: Tasks/ViewResources/5
+        public ActionResult ViewResources(int? id)
+        {
+            var TaskResources = taskManagementEntities.ResourceTasks.Where(rt => rt.TaskId == id).ToList();
+            var ResourceList = new List<Resource>();
+            foreach (var taskResource in TaskResources)
+            {
+                var result = taskManagementEntities.Resources.Where(res => res.ResourceId == taskResource.ResourceId);
+                if (result != null)
+                {
+                    ResourceList.Add(result.First());
+                }
+            }
+            ViewBag.Resources = ResourceList;
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Task task = taskManagementEntities.Tasks.Find(id);
+            if (task == null)
+            {
+                return HttpNotFound();
+            }
+            return View(task);
         }
 
         // GET: Tasks/Details/5
@@ -28,7 +141,7 @@ namespace MvcApplication.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Task task = db.Tasks.Find(id);
+            Task task = taskManagementEntities.Tasks.Find(id);
             if (task == null)
             {
                 return HttpNotFound();
@@ -39,7 +152,7 @@ namespace MvcApplication.Controllers
         // GET: Tasks/Create
         public ActionResult Create()
         {
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName");
+            ViewBag.ProjectId = new SelectList(taskManagementEntities.Projects, "ProjectId", "ProjectName");
             return View();
         }
 
@@ -48,16 +161,16 @@ namespace MvcApplication.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TaskID,Name,Duration,Start,Finish,TaskMode,ProjectId")] Task task)
+        public ActionResult Create([Bind(Include = "TaskId,Name,Duration,Start,Finish,TaskMode,ProjectId")] Task task)
         {
             if (ModelState.IsValid)
             {
-                db.Tasks.Add(task);
-                db.SaveChanges();
+                taskManagementEntities.Tasks.Add(task);
+                taskManagementEntities.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName", task.ProjectId);
+            ViewBag.ProjectId = new SelectList(taskManagementEntities.Projects, "ProjectId", "ProjectName", task.ProjectId);
             return View(task);
         }
 
@@ -68,12 +181,12 @@ namespace MvcApplication.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Task task = db.Tasks.Find(id);
+            Task task = taskManagementEntities.Tasks.Find(id);
             if (task == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName", task.ProjectId);
+            ViewBag.ProjectId = new SelectList(taskManagementEntities.Projects, "ProjectId", "ProjectName", task.ProjectId);
             return View(task);
         }
 
@@ -82,15 +195,15 @@ namespace MvcApplication.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "TaskID,Name,Duration,Start,Finish,TaskMode,ProjectId")] Task task)
+        public ActionResult Edit([Bind(Include = "TaskId,Name,Duration,Start,Finish,TaskMode,ProjectId")] Task task)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(task).State = EntityState.Modified;
-                db.SaveChanges();
+                taskManagementEntities.Entry(task).State = EntityState.Modified;
+                taskManagementEntities.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName", task.ProjectId);
+            ViewBag.ProjectId = new SelectList(taskManagementEntities.Projects, "ProjectId", "ProjectName", task.ProjectId);
             return View(task);
         }
 
@@ -101,7 +214,7 @@ namespace MvcApplication.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Task task = db.Tasks.Find(id);
+            Task task = taskManagementEntities.Tasks.Find(id);
             if (task == null)
             {
                 return HttpNotFound();
@@ -114,17 +227,42 @@ namespace MvcApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Task task = db.Tasks.Find(id);
-            db.Tasks.Remove(task);
-            db.SaveChanges();
+            Task task = taskManagementEntities.Tasks.Find(id);
+            taskManagementEntities.Tasks.Remove(task);
+            taskManagementEntities.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        // POST: Tasks/DeassignResource/5
+        [HttpPost, ActionName("DeassignResource")]
+        public ActionResult DeassignResource(int id)
+        {
+            ResourceTask resourceTask = taskManagementEntities.ResourceTasks.Find(id);
+            taskManagementEntities.ResourceTasks.Remove(resourceTask);
+            taskManagementEntities.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        // GET: Tasks/DeassignResource/5
+        public ActionResult DeassignResource(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ResourceTask resourceTask = taskManagementEntities.ResourceTasks.Find(id);
+            if (resourceTask == null)
+            {
+                return HttpNotFound();
+            }
+            return View(resourceTask);
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                taskManagementEntities.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -14,7 +14,15 @@ namespace MvcApplication
     
     public partial class Task
     {
-        public int TaskID { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Task()
+        {
+            this.ResourceTasks = new HashSet<ResourceTask>();
+            this.TaskPredecessors = new HashSet<TaskPredecessor>();
+            this.TaskPredecessors1 = new HashSet<TaskPredecessor>();
+        }
+    
+        public int TaskId { get; set; }
         public string Name { get; set; }
         public Nullable<decimal> Duration { get; set; }
         public Nullable<System.DateTime> Start { get; set; }
@@ -23,5 +31,11 @@ namespace MvcApplication
         public int ProjectId { get; set; }
     
         public virtual Project Project { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ResourceTask> ResourceTasks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TaskPredecessor> TaskPredecessors { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TaskPredecessor> TaskPredecessors1 { get; set; }
     }
 }

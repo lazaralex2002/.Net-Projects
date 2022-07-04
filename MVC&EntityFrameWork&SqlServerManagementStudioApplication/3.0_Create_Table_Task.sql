@@ -1,7 +1,7 @@
 USE TaskManagement
 CREATE TABLE Task
 (
-TaskID int PRIMARY KEY,
+TaskId int IDENTITY(1,1) PRIMARY KEY,
 Name varchar(50),
 Duration numeric(8,1),
 Start datetime,

@@ -7,6 +7,18 @@
 
 <h2>Index</h2>
 
+<form action="/Tasks" method="get" class="dropdown">
+    <label for="project">Choose which tasks you want to see:</label>
+    <select id="project" name="project">
+        <option value="">All Tasks</option>
+        @foreach (var proj in ViewBag.Projects)
+        {
+            <option value=" @proj.ProjectId "> @proj.ProjectName </option>
+        }
+    </select>
+    <input type="submit" value="Select" class="btn btn-default">
+</form>
+
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
@@ -30,35 +42,53 @@
         <th>
             @Html.DisplayNameFor(model => model.Project.ProjectName)
         </th>
+        <th>
+            TaskCost
+        </th>
+        <th>
+
+        </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Duration)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Start)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Finish)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TaskMode)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Project.ProjectName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.TaskID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.TaskID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.TaskID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Duration)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Start)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Finish)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaskMode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            </td>
+            <td>
+                @foreach (var row in ViewBag.TaskCost)
+                {
+                    if (row.ProjectId == item.ProjectId && row.TaskId == item.TaskId)
+                    {
+                        @row.TaskCost
+                    }
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.TaskId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.TaskId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.TaskId }) |
+                @Html.ActionLink("Assign Resource", "AssignResource", new { id = item.TaskId }) |
+                @Html.ActionLink("View Resources", "ViewResources", new { id = item.TaskId })
+            </td>
+        </tr>
+    }
 
 </table>
